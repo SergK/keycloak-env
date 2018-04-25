@@ -10,17 +10,21 @@ volumes:
 
 services:
   postgres:
-      image: postgres
+      image: postgres:9.6
+      container_name: postgres
       volumes:
         - postgres_data:/var/lib/postgresql/data
       environment:
         POSTGRES_DB: keycloak
         POSTGRES_USER: keycloak
         POSTGRES_PASSWORD: password
+
   keycloak:
-      image: jboss/keycloak
+      image: jboss/keycloak:3.4.3.Final
+      container_name: keycloak
       environment:
-        POSTGRES_ADDR: postgres
+        POSTGRES_PORT_5432_TCP_ADDR: postgres
+        POSTGRES_PORT_5432_TCP_PORT: 5432
         POSTGRES_DATABASE: keycloak
         POSTGRES_USER: keycloak
         POSTGRES_PASSWORD: password
@@ -36,7 +40,10 @@ services:
         - keycloak_data:/data
 
   jenkins:
-      image: jenkins
+      image: openshift/jenkins-2-centos7:latest
+      container_name: jenkins
+      environment:
+        JENKINS_PASSWORD: admin
       ports:
         - '8081:8080'
         - "50000:50000"
