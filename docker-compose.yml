@@ -65,3 +65,15 @@ services:
         - "50000:50000"
       volumes:
         - 'jenkins_data:/jenkins'
+
+  gerrit:
+      image: openfrontier/gerrit:2.14.1
+      container_name: gerrit
+      environment:
+        # AUTH_TYPE: DEVELOPMENT_BECOME_ANY_ACCOUNT
+        AUTH_TYPE: OAUTH
+      ports:
+        - 8082:8080
+        - 29418:29418
+      volumes:
+        - /srv/infra/gerrit:/var/gerrit/review_site
