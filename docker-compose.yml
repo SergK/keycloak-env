@@ -9,6 +9,8 @@ volumes:
       driver: local
   gerrit_data:
       driver: local
+  nexus_data:
+      driver: local
 
 services:
   postgres:
@@ -93,3 +95,13 @@ services:
         - 29418:29418
       volumes:
         - gerrit_data:/var/gerrit/review_site
+
+  nexus:
+      image: sonatype/nexus3:3.6.2
+      container_name: nexus
+      environment:
+        NEXUS_CONTEXT: /
+      ports:
+        - '8083:8081'
+      volumes:
+        - nexus_data:/nexus-data
