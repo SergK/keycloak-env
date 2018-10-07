@@ -16,6 +16,8 @@ services:
   postgres:
       image: postgres:9.6
       container_name: postgres
+      ports:
+        - 5432:5432
       volumes:
         - postgres_data:/var/lib/postgresql/data
         - ./postgres/keycloak.sql:/docker-entrypoint-initdb.d/keycloak.sql
@@ -90,6 +92,7 @@ services:
         OAUTH_KEYCLOAK_CLIENT_SECRET: 2b2ffeae-6d4c-42c8-b068-2311e1822f4a
         OAUTH_KEYCLOAK_REALM: ci
         OAUTH_KEYCLOAK_ROOT_URL: http://keycloak:8080
+        GERRIT_INIT_ARGS: --install-plugin=replication
       ports:
         - 8082:8080
         - 29418:29418
