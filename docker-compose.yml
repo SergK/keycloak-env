@@ -11,6 +11,11 @@ volumes:
       driver: local
   nexus_data:
       driver: local
+  sonarqube_bundled-plugins:
+      driver: local
+  sonar_data:
+      driver: local
+
 
 services:
   postgres:
@@ -108,3 +113,15 @@ services:
         - '8083:8081'
       volumes:
         - nexus_data:/nexus-data
+
+  sonar:
+      image: sonarqube:7.1
+      restart: always
+      environment:
+        - SONARQUBE_JDBC_USERNAME=sonar
+        - SONARQUBE_JDBC_PASSWORD=sonar
+        - SONARQUBE_JDBC_URL=jdbc:postgresql://postgres:5432/sonar
+      ports:
+        - "9000:9000"
+      volumes:
+        - sonar_data:/opt/sonarqube
