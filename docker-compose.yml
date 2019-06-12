@@ -11,9 +11,9 @@ volumes:
       driver: local
   nexus_data:
       driver: local
-  sonarqube_bundled-plugins:
-      driver: local
   sonar_data:
+      driver: local
+  grafana_data:
       driver: local
 
 
@@ -57,7 +57,7 @@ services:
       environment:
         JENKINS_PASSWORD: admin
         INSTALL_PLUGINS: ace-editor:1.0.1,allure-jenkins-plugin:2.26.0,analysis-collector:1.52,analysis-core:1.94,anchore-container-scanner:1.0.17,
-          antisamy-markup-formatter:1.5,apache-httpcomponents-client-4-api:4.5.3-2.1,authentication-tokens:1.3,aws-device-farm:1.22,blueocean:1.5.0,
+          antisamy-markup-formatter:1.5,apache-httpcomponents-client-4-api:4.5.3-2.1,authentication-tokens:1.3,blueocean:1.5.0,
           blueocean-autofavorite:1.2.0,blueocean-bitbucket-pipeline:1.5.0,blueocean-commons:1.5.0,blueocean-config:1.5.0,blueocean-core-js:1.5.0,
           blueocean-dashboard:1.5.0,blueocean-display-url:2.2.0,blueocean-events:1.5.0,blueocean-git-pipeline:1.5.0,blueocean-github-pipeline:1.5.0,
           blueocean-i18n:1.5.0,blueocean-jira:1.5.0,blueocean-jwt:1.5.0,blueocean-personalization:1.5.0,blueocean-pipeline-api-impl:1.5.0,
@@ -137,3 +137,24 @@ services:
     container_name: nginx
     ports:
       - "8085:80"
+
+  grafana:
+    image: grafana/grafana:5.2.0
+    container_name: grafana
+    environment:
+      GF_AUTH_BASIC_ENABLED: 'true'
+      GF_USERS_ALLOW_ORG_CREATE: 'true'
+      GF_SERVER_ROOT_URL: http://grafana:3000
+      # GF_AUTH_DISABLE_LOGIN_FORM: 'true'
+      GF_AUTH_GENERIC_OAUTH_ENABLED: 'true'
+      GF_AUTH_GENERIC_OAUTH_NAME: OAuth
+      GF_AUTH_GENERIC_OAUTH_ALLOW_SIGN_UP: 'true'
+      GF_AUTH_GENERIC_OAUTH_CLIENT_ID: grafana-test
+      GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET: b20631b5-aecd-40da-98ca-e35c9d48e92b
+      GF_AUTH_GENERIC_OAUTH_AUTH_URL: http://keycloak/auth/realms/CI/protocol/openid-connect/auth
+      GF_AUTH_GENERIC_OAUTH_TOKEN_URL: http://keycloak/auth/realms/CI/protocol/openid-connect/token
+      GF_AUTH_GENERIC_OAUTH_API_URL: http://keycloak/auth/realms/CI/protocol/openid-connect/userinfo
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
